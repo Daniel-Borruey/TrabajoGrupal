@@ -29,6 +29,18 @@ uint32_t led_high_level = 2;
 void setup() {
   // put your setup code here, to run once:
 
+
+
+  // Conexión wifi  
+  Serial.println("Conectando a WiFi...");
+  WiFi.begin(ssid, password);
+  while (WiFi.status() != WL_CONNECTED) {
+    delay(1000);
+    Serial.print(".");
+  }
+  Serial.println("\nConexión WiFi establecida.");
+  Serial.print("Dirección IP: ");
+  Serial.println(WiFi.localIP());
 }
 
 void loop() {
