@@ -19,7 +19,7 @@ const int32_t daylightoffset_sec = 0;
 // MQTT
 const char* mqtt_username = "grupo_3";
 const char* mqtt_password = "1234";
-const char* mqtt_server = "broker.emqx.io";
+const char* mqtt_server = "broker.hivemq.com";
 const int mqtt_port = 1883; 
 //leds
 uint32_t led_low_level = 2;
