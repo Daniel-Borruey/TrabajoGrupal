@@ -1,4 +1,4 @@
-//Incluimos las librerias necesarias
+l//Incluimos las librerias necesarias
 #include <WiFi.h>
 #include "time.h"
 #include <stdint.h>
@@ -28,7 +28,7 @@ uint32_t led_high_level = 2;
 
 void setup() {
   // put your setup code here, to run once:
-
+Serial.println(115200);
 
 
   // Conexión wifi  
