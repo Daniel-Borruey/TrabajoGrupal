@@ -60,6 +60,18 @@ void loop() {
 
 
 
+void automatic(char* topic, byte* payload, unsigned int length) {
+
+if(value_1 == x && value_2 == 1){
+  digitalWrite(led_low_level, HIGH);
+  
+}
+
+if()
+
+if()
+
+
 
 //Función callback
 void callback(char* topic, byte* payload, unsigned int length) {
@@ -86,11 +98,13 @@ void callback(char* topic, byte* payload, unsigned int length) {
     if (mqtt_client.connect(client_id.c_str(), mqtt_username, mqtt_password)) {
       Serial.println("Conectado a MQTT");
 
-      mqtt_client.subscribe("sensor/boton");
+      mqtt_client.subscribe("sensor/low");
+      mqtt_client.subscribe("sensor/medium");
+      mqtt_client.subscribe("sensor/high");
       Serial.println("Identificado.");
     } 
     else {
-      Serial.print("Error, código");
+      Serial.print("Error, reconexión en 5s.");
       Serial.print(mqtt_client.state());
       
       delay(5000);
