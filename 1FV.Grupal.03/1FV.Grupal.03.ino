@@ -55,3 +55,47 @@ void loop() {
 
 }
 
+
+
+
+
+
+
+//Función callback
+void callback(char* topic, byte* payload, unsigned int length) {
+  Serial.print("Mensaje del topico");
+  Serial.print(topic);
+
+
+  String message;
+  for (unsigned int i = 0; i < length; i++) {
+    message += (char)payload[i];
+  }
+
+  Serial.print("Mensaje: ");
+  Serial.println(message);
+ 
+  }
+
+
+  //Función reconnec por si la conexió falla volver a conectar con el MQTT
+  void reconnect() {
+  while (!mqtt_client.connected()) {
+    Serial.print("Conectando a MQTT...");
+      String client_id = "esp32-client-" + String(WiFi.macAddress());
+    if (mqtt_client.connect(client_id.c_str(), mqtt_username, mqtt_password)) {
+      Serial.println("Conectado a MQTT");
+
+      mqtt_client.subscribe("sensor/boton");
+      Serial.println("Identificado.");
+    } 
+    else {
+      Serial.print("Error, código");
+      Serial.print(mqtt_client.state());
+      
+      delay(5000);
+    }
+  }
+  }
+
+
