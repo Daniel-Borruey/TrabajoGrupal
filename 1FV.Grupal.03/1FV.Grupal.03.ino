@@ -25,9 +25,16 @@ const int mqtt_port = 1883;
 uint32_t led_low_level = 2;
 uint32_t led_medium_level = 2;
 uint32_t led_high_level = 2;
+//Sensor LDR 
+int32_t LDR = 18;
+int32_t LDR_value;
 
 void setup() {
   // put your setup code here, to run once:
+pinMode(led_low_level, OUTPUT);
+pinMode(led_medium_level, OUTPUT);
+pinMode(led_high_level, OUTPUT);
+pinMode(LDR, INPUT);
 
 
 
