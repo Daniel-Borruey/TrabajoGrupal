@@ -4,6 +4,23 @@
 #include <stdint.h>
 #include <PubSubClient.h>
 
+// WIFI
+const char* ssid = "ALUMNOS_CICLOS";
+const char* password = "Ciclos2025sz?";
+
+
+// Fecha y hora
+const char* ntpServer = "es.pool.ntp.org";
+// Zona horaria
+const int32_t gmtoffset_sec = 3600;
+// Horario de verano
+const int32_t daylightoffset_sec = 0;
+
+// MQTT
+const char* mqtt_username = "grupo_3";
+const char* mqtt_password = "1234";
+const char* mqtt_server = "broker.emqx.io";
+const int mqtt_port = 1883;
 
 void setup() {
   // put your setup code here, to run once:
