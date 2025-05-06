@@ -20,7 +20,11 @@ const int32_t daylightoffset_sec = 0;
 const char* mqtt_username = "grupo_3";
 const char* mqtt_password = "1234";
 const char* mqtt_server = "broker.emqx.io";
-const int mqtt_port = 1883;
+const int mqtt_port = 1883; 
+//leds
+uint32_t led_low_level = 2;
+uint32_t led_medium_level = 2;
+uint32_t led_high_level = 2;
 
 void setup() {
   // put your setup code here, to run once:
