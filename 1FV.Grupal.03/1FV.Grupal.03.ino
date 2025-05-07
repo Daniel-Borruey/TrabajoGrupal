@@ -14,7 +14,7 @@ const char* ntpServer = "es.pool.ntp.org";
 // Zona horaria
 const int32_t gmtoffset_sec = 3600;
 // Horario de verano
-const int32_t daylightoffset_sec = 0;
+const int32_t daylightoffset_sec = 3600;
 
 // MQTT
 const char* mqtt_username = "grupo_3";
@@ -60,24 +60,26 @@ void loop() {
 
 
 
-void automatic(char* topic, byte* payload, unsigned int length) {
-
-if(value_1 == x && value_2 == 1){
-  digitalWrite(led_low_level, HIGH);
-  
+void manual(char topic) {
+switch(topic) {
+  case 'sensor/low':
+    Serial.println("Funciona 1");
+    break;
+  case 'sensor/medium':
+    Serial.println("Funciona 2");
+    break;
+  case 'sensor/high':
+    Serial.println("Funciona 3");
+    break;
+  default:
+}
 }
 
-if()
-
-if()
-
-
-
 //Función callback
-void callback(char* topic, byte* payload, unsigned int length) {
+void callback(char topic, byte payload, unsigned int length) {
   Serial.print("Mensaje del topico");
-  Serial.print(topic);
-
+  Serial.print(topic);  
+  manual(topic);
 
   String message;
   for (unsigned int i = 0; i < length; i++) {
@@ -91,7 +93,7 @@ void callback(char* topic, byte* payload, unsigned int length) {
 
 
   //Función reconnec por si la conexió falla volver a conectar con el MQTT
-  void reconnect() {
+  void reconnect(){
   while (!mqtt_client.connected()) {
     Serial.print("Conectando a MQTT...");
       String client_id = "esp32-client-" + String(WiFi.macAddress());
@@ -111,5 +113,6 @@ void callback(char* topic, byte* payload, unsigned int length) {
     }
   }
   }
+
 
 
