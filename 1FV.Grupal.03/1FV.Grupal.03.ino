@@ -1,4 +1,4 @@
-l//Incluimos las librerias necesarias
+//Incluimos las librerias necesarias
 #include <WiFi.h>
 #include "time.h"
 #include <stdint.h>
@@ -45,6 +45,15 @@ Serial.println(115200);
 
 void loop() {
   // put your main code here, to run repeatedly:
-
+if(!mqtt_client.connected()){
+      reconnect();  
+      }
+  mqtt_client.loop();//procesa los mensajes
+  getLocalTime(&timeinfo);//Recoge la fecha y hora desde la wifi
+  Serial.println(&timeinfo, "%d %m %Y %H:%M:%S");
+  String currentTime = String(timeinfo.tm_mday)+"/"+String(timeinfo.tm_mon + 1 )+"/"+String(timeinfo.tm_year + 1900);
+    if(mqtt_client.connected()){
+    mqtt_client.publish("sensor/hora", "hola");
+  }
 }
 
