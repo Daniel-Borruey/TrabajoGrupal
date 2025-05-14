@@ -29,26 +29,20 @@ const int mqtt_port = 1883;
 WiFiClient espClient;
 PubSubClient mqtt_client(espClient);
 //leds
-uint32_t led_low_level = 2;
+uint32_t led_low_level = 18;
 uint32_t led_medium_level = 4;
 uint32_t led_high_level = 5;
 //Sensor LDR 
-int32_t LDR = 18;
+int32_t LDR = 34;
 int32_t LDR_value;
 
 void setup() {
   // put your setup code here, to run once:
   Serial.begin(115200);
-
-pinMode(led_low_level, OUTPUT);
-pinMode(led_medium_level, OUTPUT);
-pinMode(led_high_level, OUTPUT);
-pinMode(LDR, INPUT);
-
-
-
-
-
+  pinMode(led_low_level, OUTPUT);
+  pinMode(led_medium_level, OUTPUT);
+  pinMode(led_high_level, OUTPUT);
+  pinMode(LDR, INPUT);
   // Conexión wifi  
   Serial.println("Conectando a WiFi...");
   WiFi.begin(ssid, password);
@@ -59,9 +53,9 @@ pinMode(LDR, INPUT);
   Serial.println("\nConexión WiFi establecida.");
   Serial.print("Dirección IP: ");
   Serial.println(WiFi.localIP());
-    // Fexha y hora
+  // Fexha y hora
   configTime(gmtoffset_sec, daylightoffset_sec, ntpServer);
- //Configuramos la NTP
+   //Configuramos la NTP
 
   mqtt_client.setServer(mqtt_server,  mqtt_port);
   mqtt_client.setCallback(callback);
@@ -69,49 +63,43 @@ pinMode(LDR, INPUT);
 
 void loop() {
   // put your main code here, to run repeatedly:
-LDR_value = analogRead(LDR);
+  LDR_value = analogRead(LDR);
 
-if(!mqtt_client.connected()){
-      reconnect();  
-      }
+  if(!mqtt_client.connected()){
+    reconnect();  
+    }
   mqtt_client.loop();//procesa los mensajes
+
   getLocalTime(&timeinfo);//Recoge la fecha y hora desde la wifi
-  Serial.println(&timeinfo, "%d %m %Y %H:%M:%S");
+
+  erial.println(&timeinfo, "%d %m %Y %H:%M:%S");
+
   String currentTime = String(timeinfo.tm_mday)+"/"+String(timeinfo.tm_mon + 1 )+"/"+String(timeinfo.tm_year + 1900);
-    if(mqtt_client.connected()){
-    mqtt_client.publish("sensor/persiana", "hola");
-  }
-  
+
+
+  String estado_actual;
   //Dependiendo de a que boton se le de desde el MQTT hara uno de los 3 casos
-if(LDR_value >= 100){
-    Serial.println("Persiana abajo");
-    digitalWrite(led_low_level, HIGH);
-    digitalWrite(led_medium_level, LOW);
-    digitalWrite(led_high_level, LOW);
-    mqtt_client.publish("sensor/persiana", "Bajo");
-}
-if(LDR_value >= 500){
-    Serial.println("Persiana medio");
-    digitalWrite(led_low_level, LOW);
-    digitalWrite(led_medium_level, HIGH);
-    digitalWrite(led_high_level, LOW);
-    mqtt_client.publish("sensor/persiana", "Medio");
-  }  
-if(LDR_value >= 1000){
-    Serial.println("Persiana alto");
+  if (LDR_value >= 3500) {
+    estado_actual = "Alto";
     digitalWrite(led_low_level, LOW);
     digitalWrite(led_medium_level, LOW);
     digitalWrite(led_high_level, HIGH);
-    mqtt_client.publish("sensor/persiana", "Alto");
-}
-}
-
-
-
-
-
-
-void manual(char topic) {
+  } else if (LDR_value >= 1500 && LDR_value <= 3500) {
+    estado_actual = "Medio";
+    digitalWrite(led_low_level, LOW);
+    digitalWrite(led_medium_level, HIGH);
+    digitalWrite(led_high_level, LOW);
+  } else if (LDR_value < 1500) {
+    estado_actual = "Bajo";
+    digitalWrite(led_low_level, HIGH);
+    digitalWrite(led_medium_level, LOW);
+    digitalWrite(led_high_level, LOW);
+  }
+  Serial.println("Estado persiana: " + estado_actual);
+  if(mqtt_client.connected()){
+    mqtt_client.publish("sensor/persiana", estado_actual.c_str());
+      }
+delay(100);
 
 }
 
@@ -119,23 +107,20 @@ void manual(char topic) {
 void callback(char* topic, byte* payload, unsigned int length) {
   Serial.print("Mensaje del topico");
   Serial.print(topic);  
-
   String message;
   for (unsigned int i = 0; i < length; i++) {
     message += (char)payload[i];
   }
-
   Serial.print("Mensaje: ");
   Serial.println(message);
 
   }
 
-
   //Función reconnec por si la conexió falla volver a conectar con el MQTT
   void reconnect(){
   while (!mqtt_client.connected()) {
     Serial.print("Conectando a MQTT...");
-      String client_id = "esp32-client-" + String(WiFi.macAddress());
+    String client_id = "esp32-client-" + String(WiFi.macAddress());
     if (mqtt_client.connect(client_id.c_str(), mqtt_username, mqtt_password)) {
       Serial.println("Conectado a MQTT");
       Serial.println("Identificado.");
